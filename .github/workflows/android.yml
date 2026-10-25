@@ -47,8 +47,20 @@ jobs:
       - name: Inspect APK contents
         working-directory: experiments/tinder-reconstruction
         run: |
-          unzip -l android/dist/rea-tinder-reconstruction.apk
-          unzip -p android/dist/rea-tinder-reconstruction.apk AndroidManifest.xml > /dev/null && echo "manifest present"
+          APK=android/dist/rea-tinder-reconstruction.apk
+          unzip -l "$APK"
+          unzip -p "$APK" AndroidManifest.xml > /dev/null && echo "manifest present"
+          # Assets are packaged at the root (aapt2 -A), which is what MainActivity
+          # opens. Assert the bundle really is inside before calling it built.
+          for entry in classes.dex assets/index.html assets/app.js \
+                       assets/styles.css assets/offline/browser-mock.mjs \
+                       assets/offline/mock-core.mjs assets/offline/evidence/api-contract.json \
+                       assets/img/tariro.jpg; do
+            unzip -l "$APK" | grep -q " $entry$" || { echo "missing $entry"; exit 1; }
+          done
+          unzip -p "$APK" assets/index.html | grep -q "offline/browser-mock.mjs" \
+            || { echo "offline runtime not injected"; exit 1; }
+          echo "bundle contents verified"
 
       - uses: actions/upload-artifact@v4
         with:
