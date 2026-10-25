@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Single-activity WebView shell for the offline reconstruction.
+
+  The INTERNET permission is declared only because Android's WebView is happier
+  with it present; every request is answered from assets by MainActivity, and the
+  page's API calls are handled in JavaScript, so the app never opens a socket.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="dev.rea.tinderreconstruction">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="false"
+        android:label="REA Tinder Reconstruction"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.Material.NoActionBar">
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|uiMode"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

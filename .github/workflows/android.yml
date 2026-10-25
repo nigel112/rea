@@ -1,0 +1,71 @@
+name: android
+
+# Builds the offline reconstruction APK on every change to the experiment.
+#
+# The sandbox this experiment was written in has no JDK or Android SDK, so CI is
+# where the APK is produced. The job also re-runs the offline verifier, which
+# exercises the exact bundle that goes into the APK.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - arena/ac792185-rea
+    paths:
+      - "experiments/tinder-reconstruction/**"
+      - "!experiments/tinder-reconstruction/android/dist/**"
+      - ".github/workflows/android.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          java -version
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls "$ANDROID_HOME/build-tools"
+          ls "$ANDROID_HOME/platforms"
+
+      - name: Stage offline bundle
+        working-directory: experiments/tinder-reconstruction
+        run: node android/stage.mjs
+
+      - name: Verify offline bundle
+        working-directory: experiments/tinder-reconstruction
+        run: node android/verify-offline.mjs
+
+      - name: Build APK
+        working-directory: experiments/tinder-reconstruction
+        run: bash android/build-apk.sh
+
+      - name: Inspect APK contents
+        working-directory: experiments/tinder-reconstruction
+        run: |
+          unzip -l android/dist/rea-tinder-reconstruction.apk
+          unzip -p android/dist/rea-tinder-reconstruction.apk AndroidManifest.xml > /dev/null && echo "manifest present"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rea-tinder-apk
+          path: experiments/tinder-reconstruction/android/dist/rea-tinder-reconstruction.apk
+          if-no-files-found: error
+
+      # Artifact downloads are not reachable from the authoring sandbox, so the
+      # APK is also committed back to the branch it was built from.
+      - name: Publish APK to branch
+        run: |
+          git config user.name "rea-apk-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -f experiments/tinder-reconstruction/android/dist/rea-tinder-reconstruction.apk
+          if git diff --cached --quiet; then
+            echo "APK unchanged; nothing to publish"
+            exit 0
+          fi
+          git commit -m "build: Android APK from CI [skip ci]"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

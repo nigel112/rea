@@ -1641,7 +1641,7 @@ function inspectorAbout() {
       It is not Tinder, does not talk to Tinder, and contains no Tinder source code.
     </p>
     <div class="evidence-grid">
-      <div class="evidence-tile"><span>Backend</span><strong>mock</strong><small>Node HTTP + WebSocket</small></div>
+      <div class="evidence-tile"><span>Backend</span><strong>${globalThis.__REA_RUNTIME__ === "on-device" ? "on-device" : "mock"}</strong><small>${globalThis.__REA_RUNTIME__ === "on-device" ? "bundled core · in-page socket" : "Node HTTP + WebSocket"}</small></div>
       <div class="evidence-tile"><span>Profiles</span><strong>fictional</strong><small>generated placeholder art</small></div>
     </div>
     <p class="eyebrow" style="margin-top:8px">Fidelity</p>
