@@ -1,9 +1,0 @@
-name: probe
-on:
-  push:
-    branches: [arena/ac792185-rea]
-jobs:
-  x:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "actions alive"
