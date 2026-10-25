@@ -97,7 +97,9 @@ public class MainActivity extends Activity {
             String mime = guessMime(path);
             String encoding = isTextual(mime) ? "utf-8" : null;
             try {
-                InputStream stream = getAssets().open("www/" + path);
+                // android/stage.mjs output is the assets root (aapt2 -A), so the
+                // bundle lands at assets/index.html, assets/img/... and so on.
+                InputStream stream = getAssets().open(path);
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Cache-Control", "no-store");
                 return new WebResourceResponse(mime, encoding, 200, "OK", headers, stream);
