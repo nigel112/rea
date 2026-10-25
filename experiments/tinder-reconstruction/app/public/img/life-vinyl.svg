@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-label="Record player, vinyl crate and warm lamp light">
+  <defs>
+    <linearGradient id="room" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1a1420"/>
+      <stop offset=".5" stop-color="#2b1c23"/>
+      <stop offset="1" stop-color="#120e14"/>
+    </linearGradient>
+    <radialGradient id="lamp" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#ffc37a" stop-opacity=".95"/>
+      <stop offset=".6" stop-color="#ff9d54" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#ff9d54" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="wood" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7a4c2c"/>
+      <stop offset="1" stop-color="#40261a"/>
+    </linearGradient>
+    <linearGradient id="vinyl" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#26242b"/>
+      <stop offset=".5" stop-color="#101014"/>
+      <stop offset="1" stop-color="#2c2933"/>
+    </linearGradient>
+    <linearGradient id="sleeve" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d95d4a"/>
+      <stop offset=".6" stop-color="#a3323f"/>
+      <stop offset="1" stop-color="#6c1f36"/>
+    </linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="16"/></filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" seed="11"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope=".06"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="900" height="1200" fill="url(#room)"/>
+  <ellipse cx="700" cy="250" rx="300" ry="300" fill="url(#lamp)"/>
+  <g>
+    <path d="M640 140h120l-26 96h-68Z" fill="#e9b072"/>
+    <path d="M650 236h100v10H650Z" fill="#2a1b14"/>
+    <path d="M700 246v196" stroke="#2a1b14" stroke-width="10"/>
+    <ellipse cx="700" cy="442" rx="60" ry="14" fill="#2a1b14"/>
+  </g>
+  <rect x="40" y="640" width="820" height="120" rx="14" fill="url(#wood)"/>
+  <rect x="40" y="742" width="820" height="18" fill="#2a1810" opacity=".7"/>
+  <g>
+    <rect x="120" y="500" width="460" height="150" rx="12" fill="#17141a" stroke="#3b323f" stroke-width="3"/>
+    <circle cx="300" cy="575" r="98" fill="url(#vinyl)"/>
+    <g fill="none" stroke="#4b4652" stroke-width="1.2" opacity=".5">
+      <circle cx="300" cy="575" r="86"/><circle cx="300" cy="575" r="76"/><circle cx="300" cy="575" r="66"/>
+      <circle cx="300" cy="575" r="56"/><circle cx="300" cy="575" r="46"/><circle cx="300" cy="575" r="36"/>
+    </g>
+    <circle cx="300" cy="575" r="24" fill="#d8a451"/>
+    <circle cx="300" cy="575" r="5" fill="#2a2018"/>
+    <path d="M486 508l28 22-12 92-24-6Z" fill="#c9c3cc"/>
+    <circle cx="500" cy="530" r="9" fill="#8b8794"/>
+    <circle cx="470" cy="620" r="12" fill="#d8a451"/>
+    <rect x="520" y="540" width="40" height="10" rx="5" fill="#6b6472"/>
+  </g>
+  <g transform="rotate(-4 230 900)">
+    <rect x="90" y="820" width="300" height="300" rx="6" fill="url(#sleeve)"/>
+    <circle cx="240" cy="960" r="86" fill="#2a1420" opacity=".55"/>
+    <path d="M120 1080c40-80 90-120 150-120s96 34 130 120Z" fill="#f0c9a2" opacity=".25"/>
+    <text x="140" y="880" font-family="Georgia, serif" font-size="34" fill="#f7e3c9" opacity=".85">SOLID</text>
+    <text x="140" y="920" font-family="Georgia, serif" font-size="18" letter-spacing="6" fill="#f7e3c9" opacity=".65">GOLD · 1979</text>
+  </g>
+  <g transform="rotate(6 660 900)">
+    <rect x="520" y="800" width="280" height="240" rx="6" fill="#1c2a44"/>
+    <rect x="540" y="820" width="240" height="200" rx="4" fill="#263a5c"/>
+    <circle cx="660" cy="920" r="58" fill="#0f1626"/>
+    <circle cx="660" cy="920" r="10" fill="#e2c98a"/>
+    <g stroke="#8fa3c6" stroke-width="3" opacity=".6"><path d="M560 1000h60M700 1000h60"/></g>
+  </g>
+  <g opacity=".9">
+    <rect x="60" y="380" width="740" height="16" rx="8" fill="#2a1c1a"/>
+    <g fill="#241a22">
+      <rect x="100" y="300" width="30" height="80" rx="3"/>
+      <rect x="138" y="312" width="26" height="68" rx="3"/>
+      <rect x="172" y="292" width="34" height="88" rx="3"/>
+      <rect x="214" y="306" width="24" height="74" rx="3"/>
+      <rect x="246" y="294" width="30" height="86" rx="3"/>
+    </g>
+  </g>
+  <ellipse cx="450" cy="1120" rx="420" ry="60" fill="#000" opacity=".35" filter="url(#blur)"/>
+  <rect width="900" height="1200" filter="url(#grain)" opacity=".5"/>
+</svg>

@@ -1,0 +1,228 @@
+{
+  "schema": "rea-tinder-extract/v1",
+  "note": "Condensed extracts from full REA Evidence. Full records were produced locally and are not committed; reproduce them with scripts/reproduce.sh and see README.md#reproducing-the-evidence.",
+  "tool": {
+    "name": "rea-agents",
+    "version": "6.8.0",
+    "node": "v22.22.3",
+    "runner": "scripts/reproduce.sh"
+  },
+  "identity_semantics": {
+    "artifact_digest": "SHA-256 over the analyzed directory contents; identical across runs and machines.",
+    "semantic_graph_id": "Content-derived; reproduced identically across two independent runs on this artifact.",
+    "evidence_id": "Includes the subject name and local path, so moving or renaming the analyzed directory changes the Evidence record ID but not the graph ID."
+  },
+  "subjects": {
+    "modern": {
+      "label": "tinder-api-ts 0.5.0 (npm registry tarball)",
+      "analysis_evidence_id": "ev_65a02bfdc0f88d82a2ce44cd3293d1ac7e9e2ae245585cae1f0e2e66d5c326c7",
+      "artifact_sha256": "3ed2c4234cc2366b805b47fdcae0115438c5d9efe882d956eed5e10c0bb0c7f4",
+      "graph_id": "jsrg_c7b2a8a5a9b63af3d74c3936e60e275f4583f6b5e6b7923d5be5b7d288d54a05",
+      "coverage": "unknown",
+      "statistics": {
+        "relevant_files": 141,
+        "nested_asar_containers": 0,
+        "text_bytes_read": 566737,
+        "invalid_utf8_files": 0,
+        "parsed_javascript_files": 92,
+        "skipped_javascript_files": 0,
+        "visited_ast_nodes": 57583,
+        "findings": 1176,
+        "modules": 0,
+        "parse_failures": 0
+      },
+      "semantic": {
+        "nodes": 14197,
+        "relations": 11906,
+        "literals": 1294,
+        "unknowns": 3837,
+        "fingerprints": 248,
+        "evidence_contexts": 522,
+        "root_nodes": 92,
+        "kinds": {
+          "expression": 7439,
+          "property-slot": 3447,
+          "literal": 1294,
+          "call-site": 583,
+          "binding": 491,
+          "parameter": 319,
+          "function": 264,
+          "return-site": 163,
+          "module": 92,
+          "task": 73,
+          "boundary": 16,
+          "promise": 6,
+          "response": 6,
+          "request": 4
+        }
+      }
+    },
+    "legacy": {
+      "label": "tinder 1.19.0 (npm tarball of tinderjs)",
+      "analysis_evidence_id": "ev_cac534837fc6725d55cfc3526f080a93444c0a5186f88e68a0236f340be3e3a5",
+      "artifact_sha256": "25d1233cd621c420d43c5d354cb8abf8185f711048a2f90ee299cd52395dba42",
+      "graph_id": "jsrg_96c959ee719adbd53049fb60dbd0a7e9eb44d2bcb3007ee90f3bf0d5976a9218",
+      "coverage": "unknown",
+      "statistics": {
+        "relevant_files": 2,
+        "nested_asar_containers": 0,
+        "text_bytes_read": 17590,
+        "invalid_utf8_files": 0,
+        "parsed_javascript_files": 1,
+        "skipped_javascript_files": 0,
+        "visited_ast_nodes": 1160,
+        "findings": 3,
+        "modules": 0,
+        "parse_failures": 0
+      },
+      "semantic": {
+        "nodes": 858,
+        "relations": 936,
+        "literals": 2,
+        "kinds": {
+          "expression": 581,
+          "call-site": 99,
+          "parameter": 87,
+          "function": 46,
+          "binding": 17,
+          "property-slot": 17,
+          "return-site": 7,
+          "literal": 2,
+          "module": 1,
+          "boundary": 1
+        }
+      }
+    }
+  },
+  "route_recovery": [
+    {
+      "literal": "/v2/profile",
+      "slot": "profile",
+      "status": "found",
+      "seeds": 1,
+      "semantic_graph_id": "jsrg_c7b2a8a5a9b63af3d74c3936e60e275f4583f6b5e6b7923d5be5b7d288d54a05",
+      "trace_evidence_id": "ev_8fe6a0b5f4edd35b84663b265ab9d092d1ef649e6c8888697cef13517a48f36a"
+    },
+    {
+      "literal": "/v2/profile/user",
+      "slot": "profileUser",
+      "status": "found",
+      "seeds": 1,
+      "semantic_graph_id": "jsrg_c7b2a8a5a9b63af3d74c3936e60e275f4583f6b5e6b7923d5be5b7d288d54a05",
+      "trace_evidence_id": "ev_a4f6fd9b1ab6348c98045c72f6658a1e0c02c32a071ba67e0d2eb05e83416596"
+    },
+    {
+      "literal": "/v2/recs/core",
+      "slot": "search",
+      "status": "found",
+      "seeds": 1,
+      "semantic_graph_id": "jsrg_c7b2a8a5a9b63af3d74c3936e60e275f4583f6b5e6b7923d5be5b7d288d54a05",
+      "trace_evidence_id": "ev_dd8e4235cf9bedfa376afff08518c4bce228e4c9009ad88f431bc5376da64067"
+    },
+    {
+      "literal": "/like",
+      "slot": "like",
+      "status": "found",
+      "seeds": 1,
+      "semantic_graph_id": "jsrg_c7b2a8a5a9b63af3d74c3936e60e275f4583f6b5e6b7923d5be5b7d288d54a05",
+      "trace_evidence_id": "ev_9a1d48d9650646af0df2a1f72a496fe2c83f133148a4b45d5f1778e0ffce6cd1"
+    },
+    {
+      "literal": "/pass",
+      "slot": "dislike",
+      "status": "found",
+      "seeds": 1,
+      "semantic_graph_id": "jsrg_c7b2a8a5a9b63af3d74c3936e60e275f4583f6b5e6b7923d5be5b7d288d54a05",
+      "trace_evidence_id": "ev_6cc3e11e877b3c79324242054e6e34821c252fa03b06774785a58d161dcf37ac"
+    },
+    {
+      "literal": "/boost",
+      "slot": "boost",
+      "status": "found",
+      "seeds": 1,
+      "semantic_graph_id": "jsrg_c7b2a8a5a9b63af3d74c3936e60e275f4583f6b5e6b7923d5be5b7d288d54a05",
+      "trace_evidence_id": "ev_cd132c0c1c37f0b5679f06fd7868737f3bff21f7cb72a36769ec7551b9e07fc2"
+    },
+    {
+      "literal": "/v2/meta",
+      "slot": "location",
+      "status": "found",
+      "seeds": 1,
+      "semantic_graph_id": "jsrg_c7b2a8a5a9b63af3d74c3936e60e275f4583f6b5e6b7923d5be5b7d288d54a05",
+      "trace_evidence_id": "ev_e64275310670a323c24e9498037bf8d277a360f6be68fe5e8f1ae570bc426dfa"
+    },
+    {
+      "literal": "/v2/matches",
+      "slot": "chatMessages",
+      "status": "ambiguous",
+      "seeds": 2,
+      "semantic_graph_id": "jsrg_c7b2a8a5a9b63af3d74c3936e60e275f4583f6b5e6b7923d5be5b7d288d54a05",
+      "trace_evidence_id": "ev_961db56fa2bdd0bcaab3ea9545d45a63be839f8ed278803efa09182460fc430c"
+    },
+    {
+      "literal": "/user/matches",
+      "slot": "sendMessage",
+      "status": "found",
+      "seeds": 1,
+      "semantic_graph_id": "jsrg_c7b2a8a5a9b63af3d74c3936e60e275f4583f6b5e6b7923d5be5b7d288d54a05",
+      "trace_evidence_id": "ev_a7826de950730511728c139eae71d815dfdc787f9669da4634ff8023f2c0eaca"
+    }
+  ],
+  "feature_trace": {
+    "evidence_id": "ev_052e1a7f5f150654959aadb0cabdb7c38f7152d951fe64a543e64788dbcf46c2",
+    "seed": {
+      "kind": "string",
+      "value": "match",
+      "match": null,
+      "case_sensitive": false
+    },
+    "status": "partial",
+    "summary": {
+      "matched_seeds": 24,
+      "traced_nodes": 422,
+      "traced_edges": 848,
+      "terminal_paths": 4,
+      "native_handoffs": 0,
+      "observed_facts": 883,
+      "inferred_facts": 672,
+      "unknown_facts": 0,
+      "unavailable_facts": 0
+    }
+  },
+  "version_comparison": {
+    "evidence_id": "ev_25fbdb7f272dcc4721b7feb674550b05f94598df613caa472dd21a8b976143af",
+    "summary": {
+      "unchanged": 0,
+      "added": 417,
+      "removed": 0,
+      "changed": 1,
+      "unknown": 12
+    },
+    "matching": {
+      "exact_node_identity": 0,
+      "exact_content_digest": 0,
+      "exact_module_source_digest": 0,
+      "source_map_identity": 0,
+      "structural_fingerprint": 0,
+      "semantic_key": 1,
+      "ambiguous": 0,
+      "unmatched": 429
+    },
+    "coverage": {
+      "left_graph_status": "complete",
+      "right_graph_status": "partial",
+      "left_graph_omitted_count": 0,
+      "right_graph_omitted_count": null,
+      "status": "partial"
+    },
+    "paired_items": [
+      {
+        "node_kind": "artifact",
+        "status": "changed",
+        "basis": "semantic-key",
+        "confidence": "medium",
+        "dimensions": ["content", "properties"]
+      }
+    ]
+  }
+}

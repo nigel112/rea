@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-label="Open-mic stage with microphone, stool, notebook and coffee">
+  <defs>
+    <linearGradient id="back" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#241019"/>
+      <stop offset=".45" stop-color="#431a24"/>
+      <stop offset="1" stop-color="#150b12"/>
+    </linearGradient>
+    <radialGradient id="spot" cx=".5" cy=".2" r=".72">
+      <stop offset="0" stop-color="#ffe6b0" stop-opacity=".9"/>
+      <stop offset=".45" stop-color="#ffc27c" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#ff8a52" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a221c"/>
+      <stop offset="1" stop-color="#180e0c"/>
+    </linearGradient>
+    <linearGradient id="wood" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#82502f"/>
+      <stop offset=".5" stop-color="#a86a3f"/>
+      <stop offset="1" stop-color="#6d3f26"/>
+    </linearGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="5"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope=".06"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="900" height="1200" fill="url(#back)"/>
+  <g fill="#1a0d13" opacity=".85">
+    <path d="M0 0h200c-40 180-52 400-24 660L0 760Z"/>
+    <path d="M900 0H700c40 180 52 400 24 660L900 760Z"/>
+  </g>
+  <ellipse cx="450" cy="330" rx="430" ry="420" fill="url(#spot)"/>
+  <path d="M0 900h900v300H0Z" fill="url(#floor)"/>
+  <path d="M0 900h900v16H0Z" fill="#6d4630" opacity=".5"/>
+  <g>
+    <rect x="300" y="690" width="26" height="240" rx="8" fill="#20202a"/>
+    <rect x="250" y="920" width="130" height="18" rx="9" fill="#20202a"/>
+    <circle cx="313" cy="676" r="30" fill="#2c2c38" stroke="#4c4c5c" stroke-width="4"/>
+    <circle cx="313" cy="676" r="16" fill="#15151c"/>
+    <path d="M357 660c40 8 56 26 52 52" stroke="#4c4c5c" stroke-width="6" fill="none"/>
+  </g>
+  <g>
+    <path d="M520 760h190v22H520Z" fill="#7b4a2b"/>
+    <path d="M538 782h154l18 22H520Z" fill="#5f3820"/>
+    <path d="M560 804h110v96H560Z" fill="#2c1a12"/>
+    <path d="M560 900h-26v-70h26Zm136 0h26v-70h-26Z" fill="#6d3f26"/>
+    <path d="M540 806h150v14H540Z" fill="#c88a52" opacity=".55"/>
+  </g>
+  <g transform="rotate(-6 690 880)">
+    <rect x="580" y="820" width="220" height="150" rx="8" fill="#f0e4d0"/>
+    <path d="M600 852h180M600 878h150M600 904h180M600 930h120" stroke="#9a8a72" stroke-width="3" opacity=".6"/>
+    <rect x="580" y="820" width="16" height="150" fill="#d8c8ae"/>
+  </g>
+  <g>
+    <ellipse cx="440" cy="1010" rx="112" ry="24" fill="#0d0908" opacity=".7"/>
+    <ellipse cx="440" cy="992" rx="96" ry="20" fill="#efe0cb"/>
+    <path d="M368 992h144v18c0 28-26 44-72 44s-72-16-72-44Z" fill="#f7efe2"/>
+    <ellipse cx="440" cy="992" rx="62" ry="14" fill="#4a2a17"/>
+    <path d="M512 1002c30-2 46 8 42 26-4 18-20 26-40 24l2-12c12 0 20-4 22-12 2-10-8-14-28-14Z" fill="#f7efe2"/>
+    <g stroke="#e9dccb" stroke-width="4" opacity=".5" fill="none">
+      <path d="M430 966c-8-18-6-32 4-44M448 964c-6-20-2-36 10-48"/>
+    </g>
+  </g>
+  <g fill="#120a09" opacity=".9">
+    <circle cx="180" cy="1050" r="70"/>
+    <rect x="150" y="1050" width="60" height="90" rx="26"/>
+  </g>
+  <ellipse cx="450" cy="1160" rx="420" ry="46" fill="#000" opacity=".4" filter="url(#blur)"/>
+  <rect width="900" height="1200" filter="url(#grain)" opacity=".5"/>
+</svg>

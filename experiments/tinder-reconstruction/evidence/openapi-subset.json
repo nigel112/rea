@@ -1,0 +1,831 @@
+{
+  "schema": "tinder-openapi-subset/v1",
+  "source": {
+    "repo": "NastyDevs/tinder-api-documentation",
+    "file": "tinder-api-swagger.yaml",
+    "servers": [
+      {
+        "url": "https://api.gotinder.com",
+        "description": "Main Tinder base endpoint"
+      },
+      {
+        "url": "https://etl.tindersparks.com",
+        "description": "Statistics"
+      },
+      {
+        "url": "https://images-ssl.gotinder.com",
+        "description": "Images API"
+      }
+    ]
+  },
+  "note": "Path and query parameters only; header parameters omitted (see contract transport section).",
+  "paths": [
+    {
+      "method": "GET",
+      "path": "/like/{user_id}",
+      "summary": "Likes an user",
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "s_number",
+          "in": "query",
+          "required": false,
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/like/{user_id}/super",
+      "summary": "Super likes an user",
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/pass/{user_id}",
+      "summary": "Pass (dislike) an user",
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "s_number",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/boost",
+      "summary": "Boost your profile.",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/user/{user_id}",
+      "summary": "Gets a Tinder user profile.",
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/auth/sms/send",
+      "summary": "Sends a verification code",
+      "parameters": [
+        {
+          "name": "auth_type",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/auth/sms/validate",
+      "summary": "Sends the verification code for validation",
+      "parameters": [
+        {
+          "name": "auth_type",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/auth/login/sms",
+      "summary": "Sends the refresh token to gain an api token",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/auth/login/facebook",
+      "summary": "TODO",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/auth/verify-captcha",
+      "summary": "Sends captcha information",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/recs/core",
+      "summary": "Gets like recommendations",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/profile",
+      "summary": "Gets profile info",
+      "parameters": [
+        {
+          "name": "include",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/profile",
+      "summary": "TODO",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/profile",
+      "summary": "Deletes your Tinder account",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/profile/email_settings",
+      "summary": "TODO",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/recovery/send",
+      "summary": "Sends a recovery email",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/account-email/confirm",
+      "summary": "Confirms the registered email",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/profile/job",
+      "summary": "TODO",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/profile/school",
+      "summary": "TODO",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/auth/logout",
+      "summary": "Performs the user logout action",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/push/devices/web/{device_code}",
+      "summary": "TODO",
+      "parameters": [
+        {
+          "name": "device_code",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/push/devices/web/{device_code}",
+      "summary": "TODO",
+      "parameters": [
+        {
+          "name": "device_code",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/meta",
+      "summary": "TODO",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/ws/generate",
+      "summary": "Generates a new token for the web socket keep alive",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/ws",
+      "summary": "TODO",
+      "parameters": [
+        {
+          "name": "token",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/matches",
+      "summary": "TODO",
+      "parameters": [
+        {
+          "name": "count",
+          "in": "query",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "name": "is_tinder_u",
+          "in": "query",
+          "required": true,
+          "type": "boolean"
+        },
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "name": "message",
+          "in": "query",
+          "required": false,
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/report/user/{user_id}",
+      "summary": "Reports an user",
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/profile/photos",
+      "summary": "TODO",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/v2/onboarding/fields",
+      "summary": "Gets the onboarding fields",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/onboarding/fields",
+      "summary": "Register user",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/onboarding/photo",
+      "summary": "Sends the uploaded photo to the server",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/onboarding/complete",
+      "summary": "Completes the user registration process",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/onboarding/user",
+      "summary": "Removes temporary data",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "requested",
+          "in": "query",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/push/notifications",
+      "summary": "Don't have a clue about this call",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/instagram/authenticate",
+      "summary": "Associates Instagram account with Tinder",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/instagram/deauthorize",
+      "summary": "Disassociates Instagram account from Tinder",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/media",
+      "summary": "Removes a profile photo",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/location/popular",
+      "summary": "Get popular places.",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/v2/incentives/eligibility",
+      "summary": "Sends a promotional code, I don't know what this code refers to, it could be a month of free Tinder Plus or anything. Needs clarification.",
+      "parameters": [
+        {
+          "name": "locale",
+          "in": "query",
+          "required": false,
+          "type": "string"
+        }
+      ]
+    }
+  ]
+}

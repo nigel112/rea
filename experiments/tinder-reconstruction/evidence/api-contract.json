@@ -1,0 +1,763 @@
+{
+  "schema": "tinder-reconstruction/contract@1",
+  "disclaimer": "Unofficial interoperability notes derived from public third-party clients and public API documentation. No Tinder source code, private API access, account credentials, or live traffic were used. Field names and routes describe the public contract observed by those clients, not Tinder internals.",
+  "provenance": {
+    "rea_analysis_evidence_id": "ev_65a02bfdc0f88d82a2ce44cd3293d1ac7e9e2ae245585cae1f0e2e66d5c326c7",
+    "rea_semantic_graph_id": "jsrg_c7b2a8a5a9b63af3d74c3936e60e275f4583f6b5e6b7923d5be5b7d288d54a05",
+    "rea_extract": "rea-extract.json",
+    "openapi_subset": "openapi-subset.json",
+    "clients": [
+      {
+        "label": "tinder-api-ts 0.5.0",
+        "role": "modern request/response types and call sites",
+        "source": "npm registry tarball; analyzed by REA"
+      },
+      {
+        "label": "tinderjs 1.19.0",
+        "role": "legacy client, 2016-era endpoints and headers",
+        "source": "npm registry tarball; analyzed by REA"
+      },
+      {
+        "label": "NastyDevs/tinder-api-documentation",
+        "role": "public OpenAPI description of 39 operations",
+        "source": "public GitHub repository"
+      }
+    ],
+    "rea_legacy_analysis_evidence_id": "ev_cac534837fc6725d55cfc3526f080a93444c0a5186f88e68a0236f340be3e3a5",
+    "rea_version_comparison_evidence_id": "ev_25fbdb7f272dcc4721b7feb674550b05f94598df613caa472dd21a8b976143af",
+    "rea_note": "Route literals, property-slot names and trace evidence IDs come from the reproduction run in scripts/reproduce.sh. Evidence record IDs embed the analyzed directory name and path, so re-running with a different directory name yields new record IDs for the same content-derived semantic graph (jsrg_c7b2a8a5...)."
+  },
+  "transport": {
+    "base_urls": [
+      "https://api.gotinder.com",
+      "https://imageupload.gotinder.com",
+      "https://images-ssl.gotinder.com"
+    ],
+    "auth": {
+      "header": "X-AUTH-TOKEN",
+      "device_header": "persistent-device-id",
+      "web_storage": {
+        "indexeddb": {
+          "database": "keyval-store",
+          "store": "keyval",
+          "key": "persist::mfa",
+          "field": "authToken"
+        },
+        "localstorage": "TinderWeb/uuid"
+      },
+      "mobile_login": {
+        "endpoint": "https://api.gotinder.com/v3/auth/login",
+        "content_type": "application/x-protobuf",
+        "client_headers": {
+          "User-Agent": "Tinder/<version> (iPhone; iOS <version>; Scale/3.00)",
+          "platform": "ios",
+          "app-version": "15130000",
+          "tinder-version": "15.13.0",
+          "is-created-as-guest": "false",
+          "x-supported-image-formats": "webp,jpeg"
+        }
+      },
+      "web_login": [
+        "POST /v2/auth/sms/send",
+        "POST /v2/auth/sms/validate",
+        "POST /v2/auth/login/sms",
+        "POST /v2/auth/login/facebook",
+        "POST /v2/auth/verify-captcha"
+      ]
+    },
+    "request_headers": {
+      "X-Auth-Token": "session token",
+      "persistent-device-id": "stable device identifier",
+      "platform": "web | android | ios",
+      "app-version": "numeric build",
+      "user-session-id": "per-session identifier (documented)",
+      "app-session-id": "per-app-session identifier (documented)",
+      "user-session-time-elapsed": "milliseconds (documented)",
+      "app-session-time-elapsed": "milliseconds (documented)"
+    },
+    "response_headers": {
+      "X-Padding": "opaque padding value typed by the modern client on swipe responses"
+    },
+    "realtime": {
+      "handshake": "GET /ws/generate returns a short-lived token",
+      "socket": "/ws",
+      "legacy": "POST /updates with {last_activity_date} returns incremental changes"
+    }
+  },
+  "endpoints": [
+    {
+      "id": "recs",
+      "method": "GET",
+      "path": "/v2/recs/core",
+      "summary": "Recommendation deck",
+      "request": {
+        "query": {
+          "locale": "string",
+          "duos": "0 | 1"
+        }
+      },
+      "response": {
+        "meta": {
+          "status": 200
+        },
+        "data": {
+          "results": [
+            {
+              "type": "user",
+              "distance_mi": 4,
+              "content_hash": "string",
+              "s_number": 1234567890,
+              "teaser": {
+                "type": "string",
+                "string": "string"
+              },
+              "user": "User"
+            }
+          ]
+        }
+      },
+      "fidelity": "observed-client+documented",
+      "sources": [
+        "esm/src/tinder.js search()",
+        "esm/src/interfaces/search.d.ts",
+        "openapi GET /v2/recs/core"
+      ],
+      "rea": {
+        "literal": "/v2/recs/core",
+        "slot": "search",
+        "trace_evidence_id": "ev_dd8e4235cf9bedfa376afff08518c4bce228e4c9009ad88f431bc5376da64067"
+      }
+    },
+    {
+      "id": "like",
+      "method": "POST",
+      "path": "/like/{user_id}",
+      "summary": "Like a profile",
+      "request": {
+        "query": {
+          "locale": "string"
+        },
+        "body": {
+          "s_number": "number",
+          "liked_content_id": "string",
+          "liked_content_type": "\"photo\""
+        }
+      },
+      "response": {
+        "match": "boolean",
+        "likes_remaining": "number",
+        "status": 200
+      },
+      "fidelity": "observed-client",
+      "sources": [
+        "esm/src/tinder.js like()",
+        "esm/src/interfaces/like.d.ts",
+        "openapi GET /like/{user_id} (older method)"
+      ],
+      "rea": {
+        "literal": "/like",
+        "slot": "like",
+        "trace_evidence_id": "ev_9a1d48d9650646af0df2a1f72a496fe2c83f133148a4b45d5f1778e0ffce6cd1"
+      }
+    },
+    {
+      "id": "super-like",
+      "method": "POST",
+      "path": "/like/{user_id}/super",
+      "summary": "Super Like a profile",
+      "request": {
+        "query": {
+          "locale": "string"
+        },
+        "body": {
+          "s_number": "number",
+          "liked_content_id": "string",
+          "liked_content_type": "\"photo\""
+        }
+      },
+      "response": {
+        "status": 200,
+        "match": "boolean",
+        "super_likes": {
+          "remaining": "number",
+          "allotment": "number",
+          "resets_at": "string",
+          "superlike_refresh_amount": "number",
+          "superlike_refresh_interval": "number",
+          "superlike_refresh_interval_unit": "string"
+        }
+      },
+      "fidelity": "observed-client",
+      "sources": [
+        "esm/src/tinder.js superLike()",
+        "esm/src/interfaces/superlike.d.ts",
+        "openapi POST /like/{user_id}/super"
+      ],
+      "rea": {
+        "literal": "/like",
+        "slot": "like",
+        "note": "same recovered route constant as like; the /super suffix is appended at the call site",
+        "trace_evidence_id": "ev_9a1d48d9650646af0df2a1f72a496fe2c83f133148a4b45d5f1778e0ffce6cd1"
+      }
+    },
+    {
+      "id": "pass",
+      "method": "GET",
+      "path": "/pass/{user_id}",
+      "summary": "Pass (nope) a profile",
+      "request": {
+        "query": {
+          "locale": "string",
+          "s_number": "number"
+        }
+      },
+      "response": {
+        "status": 200
+      },
+      "fidelity": "observed-client+documented",
+      "sources": [
+        "esm/src/tinder.js dislike()",
+        "esm/src/interfaces/dislike.d.ts",
+        "openapi GET /pass/{user_id}"
+      ],
+      "rea": {
+        "literal": "/pass",
+        "slot": "dislike",
+        "trace_evidence_id": "ev_6cc3e11e877b3c79324242054e6e34821c252fa03b06774785a58d161dcf37ac"
+      }
+    },
+    {
+      "id": "boost",
+      "method": "POST",
+      "path": "/boost",
+      "summary": "Activate a profile boost",
+      "request": {
+        "query": {
+          "locale": "string"
+        },
+        "body": {}
+      },
+      "response": {
+        "allotment": "number",
+        "allotment_remaining": "number",
+        "remaining": "number",
+        "duration": "number",
+        "multiplier": "number",
+        "boost_id": "string",
+        "boost_type": "string",
+        "is_super_boost": "boolean",
+        "resets_at": "number",
+        "expires_at": "number",
+        "purchased_remaining": "number",
+        "mini_boost_remaining": "number"
+      },
+      "fidelity": "observed-client+documented",
+      "sources": [
+        "esm/src/tinder.js boost()",
+        "esm/src/interfaces/boost.d.ts",
+        "openapi POST /boost"
+      ],
+      "rea": {
+        "literal": "/boost",
+        "slot": "boost",
+        "trace_evidence_id": "ev_cd132c0c1c37f0b5679f06fd7868737f3bff21f7cb72a36769ec7551b9e07fc2"
+      }
+    },
+    {
+      "id": "location",
+      "method": "POST",
+      "path": "/v2/meta",
+      "summary": "Set the location used to serve recommendations (Passport)",
+      "request": {
+        "query": {
+          "locale": "string"
+        },
+        "body": {
+          "lat": "number",
+          "lon": "number"
+        }
+      },
+      "response": {
+        "meta": {
+          "status": 200
+        },
+        "data": {
+          "readreceipts": "object",
+          "profile": "object",
+          "super_like": "object",
+          "super_boost": "object",
+          "travel": "object"
+        }
+      },
+      "fidelity": "observed-client",
+      "sources": [
+        "esm/src/tinder.js setLocation()",
+        "esm/src/interfaces/location.d.ts",
+        "openapi POST /v2/meta",
+        "openapi GET /location/popular"
+      ],
+      "notes": [
+        "Client documentation states the location can only be changed once every 10 minutes.",
+        "The modern client's meta response types a large feature-flag payload."
+      ],
+      "rea": {
+        "literal": "/v2/meta",
+        "slot": "location",
+        "trace_evidence_id": "ev_e64275310670a323c24e9498037bf8d277a360f6be68fe5e8f1ae570bc426dfa"
+      }
+    },
+    {
+      "id": "profile",
+      "method": "GET",
+      "path": "/v2/profile",
+      "summary": "Authenticated profile with scoped features",
+      "request": {
+        "query": {
+          "locale": "string",
+          "include": "comma-separated scopes, e.g. account,user,likes,boost,super_likes,travel"
+        }
+      },
+      "response": {
+        "meta": {
+          "status": 200
+        },
+        "data": {
+          "user": "User",
+          "account": "object",
+          "likes": "object",
+          "boost": "object",
+          "super_likes": "object",
+          "travel": "object",
+          "paywalls": "array"
+        }
+      },
+      "fidelity": "observed-client+documented",
+      "sources": [
+        "esm/src/tinder.js profile()",
+        "esm/src/interfaces/profile.d.ts",
+        "openapi GET /v2/profile"
+      ],
+      "rea": {
+        "literal": "/v2/profile",
+        "slot": "profile",
+        "trace_evidence_id": "ev_8fe6a0b5f4edd35b84663b265ab9d092d1ef649e6c8888697cef13517a48f36a"
+      }
+    },
+    {
+      "id": "update-profile",
+      "method": "POST",
+      "path": "/v2/profile",
+      "summary": "Update discovery settings",
+      "request": {
+        "query": {
+          "locale": "string"
+        },
+        "body": {
+          "user": {
+            "age_filter_min": "number",
+            "age_filter_max": "number",
+            "distance_filter": "number (miles)",
+            "bio": "string",
+            "discoverable": "boolean",
+            "gender_filter": "-1 | 0 | 1",
+            "show_gender_on_profile": "boolean",
+            "auto_expansion": {
+              "age_toggle": "boolean",
+              "distance_toggle": "boolean"
+            },
+            "global_mode": {
+              "is_enabled": "boolean",
+              "display_language": "string",
+              "language_preferences": [
+                {
+                  "language": "ISO 639-1",
+                  "is_selected": "boolean"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "response": {
+        "meta": {
+          "status": 200
+        },
+        "data": {
+          "user": "User",
+          "preferences": "object"
+        }
+      },
+      "fidelity": "observed-client+documented",
+      "sources": [
+        "esm/src/routes toProfileBody (esm/src/adapters/update-profile.js)",
+        "esm/src/tinder.js updateProfile()",
+        "openapi POST /v2/profile"
+      ],
+      "notes": [
+        "The client converts kilometers to miles (rounding) before sending distance_filter.",
+        "HTTP 403 on this route is mapped to a premium-required error by the client.",
+        "Fields are emitted only when supplied, so this is a partial update."
+      ],
+      "rea": {
+        "literal": "/v2/profile",
+        "slot": "profile",
+        "trace_evidence_id": "ev_8fe6a0b5f4edd35b84663b265ab9d092d1ef649e6c8888697cef13517a48f36a"
+      }
+    },
+    {
+      "id": "update-preferences",
+      "method": "POST",
+      "path": "/v2/profile/user",
+      "summary": "Update recommendation preference filters",
+      "request": {
+        "query": {
+          "locale": "string"
+        },
+        "body": {
+          "preference_filters": {
+            "preference_user_interests_filter": ["it_* interest id or name"],
+            "preference_descriptors_filter": [
+              {
+                "id": "de_* descriptor id",
+                "selected_choices": ["array"]
+              }
+            ],
+            "preference_has_bio_filter": "boolean",
+            "preference_number_of_photos_filter": "number"
+          }
+        }
+      },
+      "response": {
+        "meta": {
+          "status": 200
+        },
+        "data": {
+          "user": "User"
+        }
+      },
+      "fidelity": "observed-client",
+      "sources": [
+        "esm/src/adapters/update-profile.js toUserProfileBody()",
+        "esm/src/tinder.js updateUserProfile()"
+      ],
+      "notes": [
+        "Editing preference filters is premium-gated; the client surfaces 403 as a premium-required error.",
+        "The reconstruction returns 403 premium_required while the session is on the free tier and 200 once Gold is simulated, matching the client-side error mapping."
+      ],
+      "rea": {
+        "literal": "/v2/profile/user",
+        "slot": "profileUser",
+        "trace_evidence_id": "ev_a4f6fd9b1ab6348c98045c72f6658a1e0c02c32a071ba67e0d2eb05e83416596"
+      }
+    },
+    {
+      "id": "matches",
+      "method": "GET",
+      "path": "/v2/matches",
+      "summary": "List matches with the latest message",
+      "request": {
+        "query": {
+          "locale": "string",
+          "count": "number (client default 60)",
+          "message": "1 to include the latest message",
+          "is_tinder_u": "boolean"
+        }
+      },
+      "response": {
+        "meta": {
+          "status": 200
+        },
+        "data": {
+          "matches": ["Match"]
+        }
+      },
+      "fidelity": "observed-client+documented",
+      "sources": [
+        "esm/src/tinder.js getMatches()",
+        "esm/src/interfaces/matches.d.ts",
+        "openapi GET /v2/matches"
+      ],
+      "rea": {
+        "literal": "/v2/matches",
+        "slot": "chatMessages",
+        "status": "ambiguous",
+        "note": "two literal occurrences matched; the same constant prefixes the match list and message routes",
+        "trace_evidence_id": "ev_961db56fa2bdd0bcaab3ea9545d45a63be839f8ed278803efa09182460fc430c"
+      }
+    },
+    {
+      "id": "messages",
+      "method": "GET",
+      "path": "/v2/matches/{match_id}/messages",
+      "summary": "Read a chat transcript",
+      "request": {
+        "query": {
+          "locale": "string",
+          "count": "number (client default 100)"
+        }
+      },
+      "response": {
+        "meta": {
+          "status": 200
+        },
+        "data": {
+          "messages": ["Message"]
+        }
+      },
+      "fidelity": "observed-client",
+      "sources": [
+        "esm/src/tinder.js getChatMessages()",
+        "esm/src/interfaces/chat.d.ts"
+      ],
+      "rea": {
+        "literal": "/v2/matches",
+        "slot": "chatMessages",
+        "trace_evidence_id": "ev_961db56fa2bdd0bcaab3ea9545d45a63be839f8ed278803efa09182460fc430c"
+      }
+    },
+    {
+      "id": "send-message",
+      "method": "POST",
+      "path": "/user/matches/{match_id}",
+      "summary": "Send a chat message",
+      "request": {
+        "query": {
+          "locale": "string"
+        },
+        "body": {
+          "message": "string"
+        }
+      },
+      "response": {
+        "_id": "string",
+        "match_id": "string",
+        "from": "user id",
+        "to": "user id",
+        "sent_date": "ISO timestamp",
+        "message": "string",
+        "timestamp": "number",
+        "created_date": "ISO timestamp",
+        "media": {
+          "width": null,
+          "height": null
+        }
+      },
+      "fidelity": "observed-client",
+      "sources": [
+        "esm/src/tinder.js sendChatMessage()",
+        "esm/src/interfaces/chat.d.ts"
+      ],
+      "rea": {
+        "literal": "/user/matches",
+        "slot": "sendMessage",
+        "trace_evidence_id": "ev_a7826de950730511728c139eae71d815dfdc787f9669da4634ff8023f2c0eaca"
+      }
+    },
+    {
+      "id": "ws-generate",
+      "method": "GET",
+      "path": "/ws/generate",
+      "summary": "Token for the realtime socket",
+      "response": {
+        "unknown": "response body not typed by the analyzed client"
+      },
+      "fidelity": "documented",
+      "sources": ["openapi GET /ws/generate", "openapi GET /ws"]
+    },
+    {
+      "id": "guest-login",
+      "method": "POST",
+      "path": "/v2/auth/login/guest",
+      "summary": "Reconstruction-only: create a local demo session",
+      "request": {
+        "body": {
+          "device_id": "string"
+        }
+      },
+      "response": {
+        "meta": {
+          "status": 200
+        },
+        "token": "string",
+        "user": "User"
+      },
+      "fidelity": "reconstruction-only",
+      "sources": ["server.mjs"],
+      "notes": [
+        "Stands in for the observed /v2/auth/sms/send, /v2/auth/sms/validate, /v2/auth/login/sms, /v2/auth/login/facebook and /v3/auth/login flows. It authenticates nothing and only creates local state."
+      ]
+    },
+    {
+      "id": "demo-likes",
+      "method": "GET",
+      "path": "/demo/likes",
+      "summary": "Reconstruction-only: local likes-you grid",
+      "request": {},
+      "response": {
+        "likes": "array",
+        "count": "number",
+        "premium_required": "boolean"
+      },
+      "fidelity": "reconstruction-only",
+      "sources": ["server.mjs"],
+      "notes": [
+        "Real clients gate this view behind a subscription; this demo exposes local state instead of claiming a recovered route."
+      ]
+    },
+    {
+      "id": "demo-premium",
+      "method": "POST",
+      "path": "/demo/premium",
+      "summary": "Reconstruction-only: toggle the simulated subscription",
+      "request": {
+        "body": {
+          "enabled": "boolean"
+        }
+      },
+      "response": {
+        "premium": "boolean"
+      },
+      "fidelity": "reconstruction-only",
+      "sources": ["server.mjs"]
+    },
+    {
+      "id": "demo-rewind",
+      "method": "POST",
+      "path": "/demo/rewind",
+      "summary": "Reconstruction-only: restore the last swiped card",
+      "request": {},
+      "response": {
+        "status": 200,
+        "restored": "recommendation result"
+      },
+      "fidelity": "reconstruction-only",
+      "sources": ["server.mjs"],
+      "notes": [
+        "The rewind action itself is a known premium feature; no recovered route exists in the analyzed clients."
+      ]
+    },
+    {
+      "id": "demo-reset",
+      "method": "POST",
+      "path": "/demo/reset",
+      "summary": "Reconstruction-only: new local session",
+      "request": {},
+      "response": {
+        "token": "string",
+        "user": "User"
+      },
+      "fidelity": "reconstruction-only",
+      "sources": ["server.mjs"]
+    }
+  ],
+  "models": {
+    "User": {
+      "_id": "string",
+      "name": "string",
+      "birth_date": "ISO timestamp; age is derived client-side",
+      "gender": "number",
+      "bio": "string",
+      "photos": ["Photo"],
+      "badges": [
+        {
+          "type": "selfie_verified"
+        }
+      ],
+      "jobs": "array",
+      "schools": "array",
+      "city": {
+        "name": "string"
+      },
+      "hide_distance": "boolean?",
+      "hide_age": "boolean?",
+      "ping_time": "ISO timestamp?"
+    },
+    "Photo": {
+      "id": "string",
+      "url": "string",
+      "processedFiles": [
+        {
+          "url": "string",
+          "width": "number",
+          "height": "number"
+        }
+      ],
+      "crop_info": {
+        "processed_by_bullseye": "boolean",
+        "user_customized": "boolean",
+        "algo": {
+          "width_pct": "number",
+          "x_offset_pct": "number",
+          "height_pct": "number",
+          "y_offset_pct": "number"
+        },
+        "faces": ["face boxes with bounding_box_percentage"]
+      },
+      "type": "\"image\" | \"video\"",
+      "extension": "\"jpg\" | \"jpg,webp\"",
+      "webp_qf": "number[]?",
+      "rank": "number?"
+    },
+    "Match": {
+      "_id": "string",
+      "id": "string",
+      "created_date": "ISO timestamp",
+      "last_activity_date": "ISO timestamp",
+      "closed": "boolean",
+      "dead": "boolean",
+      "pending": "boolean",
+      "message_count": "number",
+      "messages": ["Message"],
+      "participants": ["user id", "user id"],
+      "person": "User",
+      "seen": {
+        "match_seen": "boolean",
+        "last_seen_msg_id": "string?"
+      },
+      "readreceipt": {
+        "enabled": "boolean"
+      },
+      "is_super_like": "boolean",
+      "is_boost_match": "boolean",
+      "is_super_boost_match": "boolean",
+      "is_primetime_boost_match": "boolean",
+      "is_fast_match": "boolean",
+      "is_matchmaker_match": "boolean",
+      "is_experiences_match": "boolean",
+      "is_preferences_match": "boolean",
+      "is_lets_meet_match": "boolean",
+      "is_opener": "boolean",
+      "has_shown_initial_interest": "boolean",
+      "liked_content": {
+        "by_closer": "object?",
+        "by_opener": "object?"
+      }
+    },
+    "Message": {
+      "_id": "string",
+      "match_id": "string",
+      "from": "user id",
+      "to": "user id",
+      "message": "string",
+      "sent_date": "ISO timestamp",
+      "timestamp": "number",
+      "created_date": "ISO timestamp",
+      "is_liked": "boolean?"
+    }
+  },
+  "limits_and_monetization": {
+    "like_response": "likes_remaining is authoritative only for the response to that swipe",
+    "super_likes": "remaining/allotment/refresh fields returned by the super-like endpoint",
+    "boost": "allotment, remaining, duration, multiplier and expiry returned by /boost; no boost available maps to a typed client error",
+    "preference_editing": "HTTP 403 is mapped by the modern client to a premium-required error",
+    "free_daily_like_cap_claim": "Third-party documentation claims 100 likes/day for the free tier; not verified by REA and treated as unconfirmed external reporting"
+  },
+  "unknowns": [
+    "Ranking and recommendation scoring (s_number meaning, content_hash inputs) are not exposed by any static artifact.",
+    "Server-side matching and reciprocity rules are only observable through the match boolean.",
+    "Face Check, photo verification and moderation internals are not present in client code.",
+    "Pricing, regional paywall variations and experiment assignment logic are server-driven.",
+    "Exact realtime message schema over /ws is not typed by the analyzed client.",
+    "No live request was made; header values, rate limits and error bodies may differ in production."
+  ]
+}

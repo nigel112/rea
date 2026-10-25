@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-label="Painterly sunrise over layered hills">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#35233f"/>
+      <stop offset=".34" stop-color="#9c3f5f"/>
+      <stop offset=".62" stop-color="#ff8a5c"/>
+      <stop offset="1" stop-color="#ffc978"/>
+    </linearGradient>
+    <radialGradient id="sun" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#fff8dc"/>
+      <stop offset=".55" stop-color="#ffe6a3"/>
+      <stop offset="1" stop-color="#ffb46b" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6b4a63"/>
+      <stop offset="1" stop-color="#42334c"/>
+    </linearGradient>
+    <linearGradient id="mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3f4a4a"/>
+      <stop offset="1" stop-color="#26302f"/>
+    </linearGradient>
+    <linearGradient id="near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e2a26"/>
+      <stop offset="1" stop-color="#111a18"/>
+    </linearGradient>
+    <linearGradient id="mist" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffd9b0" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#ffe7c6" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#ffd9b0" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="soft">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope=".055"/></feComponentTransfer>
+    </filter>
+  </defs>
+  <rect width="900" height="1200" fill="url(#sky)"/>
+  <circle cx="620" cy="560" r="230" fill="url(#sun)"/>
+  <circle cx="620" cy="560" r="74" fill="#fff3cf" opacity=".95"/>
+  <ellipse cx="450" cy="640" rx="560" ry="34" fill="url(#mist)" filter="url(#soft)"/>
+  <path d="M0 700 150 596 268 664 402 528 540 668 664 590 790 682 900 618V1200H0Z" fill="url(#far)" opacity=".92"/>
+  <ellipse cx="470" cy="742" rx="520" ry="30" fill="url(#mist)" filter="url(#soft)" opacity=".8"/>
+  <path d="M0 838 120 748 246 812 372 726 512 828 646 748 764 820 900 742V1200H0Z" fill="url(#mid)"/>
+  <ellipse cx="430" cy="900" rx="500" ry="26" fill="url(#mist)" filter="url(#soft)" opacity=".7"/>
+  <path d="M0 990 138 908 268 972 420 890 560 988 700 916 820 984 900 938V1200H0Z" fill="url(#near)"/>
+  <g fill="#0c1412">
+    <path d="M700 1006c14-58 30-58 44 0 12-42 24-42 34 0 10-34 22-34 30 0l-6 194h-110Z" opacity=".9"/>
+    <path d="M120 1050c10-46 24-46 34 0 10-36 22-36 30 0 8-28 18-28 24 0l-4 150H116Z" opacity=".85"/>
+  </g>
+  <path d="M0 1200c180-46 300-98 470-96 150 0 300 42 430 96v60H0Z" fill="#0a1210" opacity=".7"/>
+  <g fill="#0a1210">
+    <path d="M330 1200c-8-60 2-92 24-120 20 30 30 66 24 120Z" opacity=".8"/>
+    <path d="M574 1200c-6-46 2-72 18-92 16 24 24 50 18 92Z" opacity=".65"/>
+  </g>
+  <g stroke="#1b2a24" stroke-width="3" opacity=".6">
+    <path d="M60 1130c30-28 70-42 110-46M700 1140c40-30 84-44 128-46"/>
+  </g>
+  <rect width="900" height="1200" filter="url(#grain)" opacity=".5"/>
+</svg>
