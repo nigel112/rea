@@ -60,7 +60,9 @@ function encodeFrame(payload, opcode = 0x1) {
 // Core publishes domain events; the Node host puts them on the wire.
 configureMock({
   publish: (session, event) => {
-    const frame = encodeFrame(JSON.stringify({ ...event, at: new Date().toISOString() }));
+    const frame = encodeFrame(
+      JSON.stringify({ ...event, at: new Date().toISOString() }),
+    );
     for (const entry of sockets) {
       if (entry.session !== session || entry.socket.destroyed) continue;
       entry.socket.write(frame);
@@ -141,7 +143,8 @@ function attachSocket(req, socket, session) {
 
 const heartbeat = setInterval(() => {
   for (const entry of sockets) {
-    if (!entry.socket.destroyed) entry.socket.write(encodeFrame(Buffer.alloc(0), 0x9));
+    if (!entry.socket.destroyed)
+      entry.socket.write(encodeFrame(Buffer.alloc(0), 0x9));
   }
 }, 30000);
 heartbeat.unref();
@@ -165,7 +168,8 @@ const MIME = new Map([
 ]);
 
 async function serveStatic(res, pathname) {
-  const relative = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
+  const relative =
+    pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
   const candidate = normalize(join(PUBLIC_DIR, relative));
   if (!candidate.startsWith(PUBLIC_DIR)) {
     res.writeHead(403, { "content-type": "text/plain" });
@@ -177,7 +181,8 @@ async function serveStatic(res, pathname) {
     const extension = extname(candidate).toLowerCase();
     res.writeHead(200, {
       "content-type": MIME.get(extension) ?? "application/octet-stream",
-      "cache-control": extension === ".html" ? "no-store" : "public, max-age=300",
+      "cache-control":
+        extension === ".html" ? "no-store" : "public, max-age=300",
       "content-length": data.length,
     });
     res.end(data);

@@ -200,7 +200,8 @@ class LocalWebSocket extends EventTarget {
         sockets.delete(entry);
         this.readyState = LocalWebSocket.CLOSED;
         this.dispatchEvent(new CloseEvent("close"));
-        if (typeof this.onclose === "function") this.onclose(new CloseEvent("close"));
+        if (typeof this.onclose === "function")
+          this.onclose(new CloseEvent("close"));
       };
       notifySocketOpen(session);
       this.dispatchEvent(new Event("open"));

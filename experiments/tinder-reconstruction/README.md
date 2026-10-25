@@ -220,6 +220,9 @@ in for a portrait) are hand-authored SVG art, so no real person appears anywhere
 - The mock server was exercised with real HTTP calls: session creation, deck,
   like→match, transcript, message + simulated reply, rewind, boost, location
   change with deck regeneration, profile, and auth rejection without a token.
+- The Android bundle was verified offline (`android/verify-offline.mjs`): 18 API
+  checks, a live in-page socket with a simulated reply, and the UI logging in and
+  rendering against no server at all.
 - The browser app was driven headlessly through its real DOM (jsdom, with the
   served `app.js` evaluated against the live mock): login, deck advance on like,
   pointer drag, keyboard swipes, Super Like → match modal, deck exhaustion, a
@@ -265,9 +268,18 @@ in for a portrait) are hand-authored SVG art, so no real person appears anywhere
 experiments/tinder-reconstruction/
 ├── README.md                     this document
 ├── app/
-│   ├── server.mjs                mock Tinder API + WebSocket + static host
+│   ├── mock-core.mjs             routes, sessions, quotas, matching, chat (no Node APIs)
+│   ├── server.mjs                Node host: static files + RFC 6455 socket
+│   ├── runtime/browser-mock.mjs  in-page host: fetch/WebSocket shims for the APK
 │   ├── data/profiles.mjs         fictional profiles, matches, locations
 │   └── public/                   index.html, styles.css, app.js, img/
+├── android/
+│   ├── app/                      manifest + MainActivity (assets served at https://app.local/)
+│   ├── stage.mjs                 bundles web assets + offline runtime
+│   ├── verify-offline.mjs        runs the bundle with no server
+│   ├── build-apk.sh              aapt2/javac/d8/zipalign/apksigner pipeline
+│   ├── keystore/rea-debug.keystore  public debug key (stable signing identity)
+│   └── dist/                     built APK
 ├── evidence/
 │   ├── api-contract.json         the reconstructed contract (18 routes, 4 models)
 │   ├── openapi-subset.json       39 documented operations, path/query params only

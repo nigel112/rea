@@ -27,13 +27,25 @@ await cp(join(EXPERIMENT, "app", "public", "img"), join(OUT, "img"), {
 });
 
 // Mock core, its data, and the offline runtime
-await cp(join(EXPERIMENT, "app", "mock-core.mjs"), join(OUT, "offline", "mock-core.mjs"));
-await cp(join(EXPERIMENT, "app", "runtime", "browser-mock.mjs"), join(OUT, "offline", "browser-mock.mjs"));
-await cp(join(EXPERIMENT, "app", "data", "profiles.mjs"), join(OUT, "offline", "data", "profiles.mjs"));
+await cp(
+  join(EXPERIMENT, "app", "mock-core.mjs"),
+  join(OUT, "offline", "mock-core.mjs"),
+);
+await cp(
+  join(EXPERIMENT, "app", "runtime", "browser-mock.mjs"),
+  join(OUT, "offline", "browser-mock.mjs"),
+);
+await cp(
+  join(EXPERIMENT, "app", "data", "profiles.mjs"),
+  join(OUT, "offline", "data", "profiles.mjs"),
+);
 
 // Evidence the inspector renders
 for (const file of ["api-contract.json", "rea-extract.json"]) {
-  await cp(join(EXPERIMENT, "evidence", file), join(OUT, "offline", "evidence", file));
+  await cp(
+    join(EXPERIMENT, "evidence", file),
+    join(OUT, "offline", "evidence", file),
+  );
 }
 
 // index.html: swap the preview's plain script tag for the offline bundle

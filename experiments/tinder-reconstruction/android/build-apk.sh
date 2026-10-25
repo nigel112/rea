@@ -77,20 +77,28 @@ cp "$BUILD/apk/unsigned.apk" "$BUILD/apk/app.apk"
 echo "== zipalign"
 "$ZIPALIGN" -f 4 "$BUILD/apk/app.apk" "$BUILD/apk/app-aligned.apk"
 
-echo "== sign (debug key, generated per build)"
-KEYSTORE="$BUILD/debug.keystore"
-rm -f "$KEYSTORE"
-keytool -genkeypair -v \
-  -keystore "$KEYSTORE" \
-  -storepass android -keypass android \
-  -alias androiddebugkey \
-  -dname "CN=Android Debug,O=Android,C=US" \
-  -keyalg RSA -keysize 2048 -validity 10000 \
-  >/dev/null 2>&1
+echo "== sign"
+# The repository ships a public debug keystore so successive builds share a
+# signing identity (an updated APK installs over the previous one). It is a
+# throwaway debug key: never use it to publish anything.
+KEYSTORE="$HERE/keystore/rea-debug.keystore"
+ALIAS="rea-debug"
+if [[ ! -f "$KEYSTORE" ]]; then
+  echo "debug keystore missing; generating one"
+  mkdir -p "$(dirname "$KEYSTORE")"
+  keytool -genkeypair -v \
+    -keystore "$KEYSTORE" \
+    -storepass android -keypass android \
+    -alias "$ALIAS" \
+    -dname "CN=REA Reconstruction Debug,O=Reverse Engineer Anything,C=ZW" \
+    -keyalg RSA -keysize 2048 -validity 36500 \
+    >/dev/null 2>&1
+fi
 
 OUT="$DIST/rea-tinder-reconstruction.apk"
 "$APKSIGNER" sign \
   --ks "$KEYSTORE" \
+  --ks-key-alias "$ALIAS" \
   --ks-pass pass:android \
   --key-pass pass:android \
   --out "$OUT" \

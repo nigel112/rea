@@ -12,8 +12,11 @@ on:
     branches:
       - arena/ac792185-rea
     paths:
-      - "experiments/tinder-reconstruction/**"
+      - "experiments/tinder-reconstruction/app/**"
+      - "experiments/tinder-reconstruction/android/**"
       - "!experiments/tinder-reconstruction/android/dist/**"
+      - "!experiments/tinder-reconstruction/android/build/**"
+      - "experiments/tinder-reconstruction/evidence/**"
       - ".github/workflows/android.yml"
 
 permissions:

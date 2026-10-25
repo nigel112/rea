@@ -108,7 +108,9 @@ function sha256Hex(text) {
     }
     for (let index = 16; index < 64; index += 1) {
       const s0 =
-        rotr(W[index - 15], 7) ^ rotr(W[index - 15], 18) ^ (W[index - 15] >>> 3);
+        rotr(W[index - 15], 7) ^
+        rotr(W[index - 15], 18) ^
+        (W[index - 15] >>> 3);
       const s1 =
         rotr(W[index - 2], 17) ^ rotr(W[index - 2], 19) ^ (W[index - 2] >>> 10);
       W[index] = (W[index - 16] + s0 + W[index - 7] + s1) >>> 0;
@@ -289,10 +291,7 @@ function recsResult(session, profile) {
     type: "user",
     distance_mi: sameCity ? profile.distance_mi : null,
     content_hash: sha256Hex(profile.id).slice(0, 16),
-    s_number: Number.parseInt(
-      sha256Hex(`${profile.id}:s`).slice(0, 8),
-      16,
-    ),
+    s_number: Number.parseInt(sha256Hex(`${profile.id}:s`).slice(0, 8), 16),
     teaser: {
       type: "photo",
       string: `${profile.neighborhood}, ${profile.city}`,
@@ -564,7 +563,6 @@ function sessionFor(req, url) {
   return sessions.get(token) ?? null;
 }
 
-
 // ---------------------------------------------------------------------------
 // Realtime hand-off
 
@@ -581,7 +579,8 @@ export function claimSocketToken(token) {
 export const sessionCount = () => sessions.size;
 
 /** Announce a freshly attached socket (both hosts call this after a handshake). */
-export const notifySocketOpen = (session) => publish(session, { type: "socket.open" });
+export const notifySocketOpen = (session) =>
+  publish(session, { type: "socket.open" });
 
 // Domain events are recorded on the session (so a late client can inspect them)
 // and handed to the host, which owns the actual transport.
@@ -674,7 +673,6 @@ function expireBoostIfNeeded(session) {
     publish(session, { type: "boost.expired" });
   }
 }
-
 
 async function handleApi(req, res, url) {
   const { pathname } = url;
