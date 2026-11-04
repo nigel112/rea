@@ -17,7 +17,7 @@ import {
   ANYWHERE_KM,
 } from '../server/domain/eligibility.js';
 import * as social from '../server/domain/social.js';
-import { buildPool, buildGrid } from '../server/domain/discovery.js';
+import { buildPool, buildGrid, scoreTrust } from '../server/domain/discovery.js';
 import { QUESTIONS_BY_ID } from '../server/seed/questions.js';
 import { seedDatabase } from '../server/seed/seed.js';
 
@@ -385,5 +385,45 @@ describe('boosts', () => {
     // An hour-old boost ended an hour ago and must not still be lifting anyone.
     assert.equal(entry?.components.boosted ?? false, false);
     db.close();
+  });
+});
+
+describe('score trust', () => {
+  it('scales the ranking match term by how much evidence backs it', () => {
+    const db = makeDb();
+    seedDatabase(db, { profiles: 200, now: NOW });
+    const viewer = hydrateUser(get(db, `SELECT * FROM users WHERE id = 'usr_demo'`));
+    const pool = buildPool(db, viewer, { now: NOW, questions: QUESTIONS_BY_ID });
+    db.close();
+
+    // The bug this guards against: an 86.6% built from 5 shared answers outranking a 64.4% built
+    // from 36. If score trust is removed, thin-data profiles climb straight back to the top.
+    const top = pool.pool.slice(0, 10);
+    const thin = top.filter((entry) => entry.score.ok && entry.score.shared < 10);
+    assert.equal(thin.length, 0, `thin-data profiles near the top: ${thin.map((e) => `${e.user.name}/${e.score.shared}`).join(', ')}`);
+    assert.ok(top.every((entry) => entry.score.shared >= 10));
+  });
+
+  it('still gives thin-data profiles a real floor, so nobody is hidden', () => {
+    // Someone you agree with on two questions should still appear — just not at the top.
+    const db = makeDb();
+    seedDatabase(db, { profiles: 200, now: NOW });
+    const viewer = hydrateUser(get(db, `SELECT * FROM users WHERE id = 'usr_demo'`));
+    const pool = buildPool(db, viewer, { now: NOW, questions: QUESTIONS_BY_ID });
+    db.close();
+    const scored = pool.pool.filter((entry) => entry.score.ok);
+    assert.ok(scored.length > 0);
+    // Every candidate keeps a positive rank contribution; trust discounts, it does not delete.
+    assert.ok(scored.every((entry) => entry.components.total > 0));
+  });
+
+  it('rewards more shared answers, all else equal', () => {
+    assert.ok(scoreTrust(1) < scoreTrust(10));
+    assert.ok(scoreTrust(10) < scoreTrust(25));
+    // Full credit at the confidence target and flat after it.
+    assert.equal(scoreTrust(25), scoreTrust(60));
+    assert.equal(scoreTrust(25), 1);
+    // Floor for no data at all.
+    assert.equal(scoreTrust(0), 0.35);
   });
 });

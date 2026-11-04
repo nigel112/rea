@@ -228,6 +228,20 @@ rankKey(candidate) :=
     + 0.15 * (candidate has an active paid boost)
 ```
 
+The `match` term is multiplied by `scoreTrust(sharedAnswers)`:
+
+```
+scoreTrust(n) = 0.35 + 0.65 × min(n, 25) / 25        (floor 0.35, full credit at 25)
+```
+
+This exists because the naive version is a lie. A pair sharing **5** answers can produce an 86.6%
+match — one rejected question and four agreements, and the geometric mean climbs. Ranked naively
+that card beat a 64.4% match built on **36** shared answers, so the top of the stack was the
+*least* defensible number on the site while the confidence badge underneath it said "medium".
+Discounting the match by its evidence base puts the two numbers back in the same units, and it is
+the same threshold (`CONFIDENCE_TARGET`) the badge already uses, so the ranker and the label cannot
+disagree.
+
 The boost term is `0` for almost everyone; it is the monetised placement product. It deliberately
 sits at the same weight as recency — enough to matter, never enough to put a stranger above someone
 you actually agree with, and it is applied to *other people's* ranking rather than to the match

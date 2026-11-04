@@ -21,6 +21,8 @@ import { publicProfile } from './profiles.js';
 
 /** Weights are exported so the UI and the docs cannot drift from the code. */
 export const RANK_WEIGHTS = Object.freeze({
+  // The match weight is additionally scaled by `scoreTrust()` — the percentage counts in
+  // proportion to how many answers back it.
   match: 0.7,
   recency: 0.15,
   completeness: 0.1,
@@ -148,8 +150,28 @@ export function buildPool(db, viewer, options = {}) {
   return { pool: pooled, excluded, viewerAnswers, now };
 }
 
+/**
+ * How much to trust a match number given how little data produced it.
+ *
+ * An 86.6% built from 5 shared answers is not comparable to a 64.4% built from 36, yet a naive
+ * ranker treats the first as far better and puts it at the top of the stack. That is the
+ * confident-sounding-number-from-no-data failure the confidence badge warns about — so the ranker
+ * has to apply the same reasoning, or the badge is decoration on a lie.
+ *
+ * Full credit at CONFIDENCE_TARGET shared answers, then a floor: somebody you agree with on 5
+ * questions is still worth showing, just not above someone you have 36 answers of evidence for.
+ *
+ * @param {number} shared
+ * @returns {number} 0.35 … 1
+ */
+export function scoreTrust(shared) {
+  if (!Number.isFinite(shared) || shared <= 0) return 0.35;
+  return Math.max(0.35, Math.min(1, 0.35 + 0.65 * Math.min(shared, CONFIDENCE_TARGET) / CONFIDENCE_TARGET));
+}
+
 export function rankComponents(viewer, candidate, score, now, options = {}) {
-  const match = score.ok ? score.match / 100 : 0;
+  // The match term is discounted by how much evidence backs it.
+  const match = score.ok ? (score.match / 100) * scoreTrust(score.shared) : 0;
   const recency = recencyScore(candidate.last_active_at, now);
   const completeness = profileCompleteness(candidate);
   const interests = interestOverlap(viewer.interests, candidate.interests);

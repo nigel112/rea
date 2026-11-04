@@ -4,7 +4,7 @@
 questionnaire-driven dating category — the product OkCupid pioneered — rebuilt from a
 reverse-engineering study of how its matching actually works.
 
-ZimDate is not a UI mock. It is a real server, a real database, a real matching kernel with 94
+ZimDate is not a UI mock. It is a real server, a real database, a real matching kernel with 97
 tests and 62 browser-level checks behind it. Start it with one command and you get a populated
 Zimbabwe dating site: 500 seeded profiles, 60 questions, live match percentages, likes, mutual
 matches, chat, moderation and paid tiers.
@@ -68,7 +68,8 @@ single most common bug in dating apps and it is directly tested
 **Discovery.** A ranked stack with a transparent scoring model —
 `0.70·match + 0.15·recency + 0.10·completeness + 0.05·shared interests + 0.02·newcomer` — plus a grid
 view with filters, an inbound-likes lane so people who already liked you are never buried, and
-undo for passes.
+undo for passes. The match term is scaled by *how many answers back it*: an 86.6% from five shared
+answers should never outrank a 64.4% from thirty-six, and it used to.
 
 **The rest of the product.** Profiles with photo galleries and prompt answers, mutual likes that
 create matches automatically, real-time chat with message limits and idempotent sends, blocks and
@@ -82,7 +83,7 @@ defence on static files, and parameterised SQL everywhere.
 ## Verify it yourself
 
 ```bash
-npm test           # 94 unit + integration tests (no dependencies)
+npm test           # 97 unit + integration tests (no dependencies)
 npm run check      # the above, then 46 self-checks against a live server
 npm run test:ui    # 62 browser-level checks (needs: npm i -D jsdom)
 ```
@@ -114,7 +115,7 @@ server/
 public/
   js/screens/          eleven screens, one module each, no build step
   styles.css           the whole design system in one file
-test/                  94 tests
+test/                  97 tests
 scripts/
   serve.mjs            entry point
   selftest.mjs         46 self-checks against a live server
