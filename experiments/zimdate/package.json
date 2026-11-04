@@ -1,0 +1,25 @@
+{
+  "name": "zimdate",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ZimDate \u2014 a clean-room, Zimbabwe-first reimplementation of the OkCupid product category: questionnaire-driven compatibility matching, discovery, likes, matches, messaging and monetisation.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "dev": "node --watch scripts/serve.mjs",
+    "seed": "node scripts/seed.mjs",
+    "reset": "node scripts/seed.mjs --fresh",
+    "test": "node --test",
+    "test:watch": "node --test --watch",
+    "test:ui": "node scripts/ui-check.mjs",
+    "check": "node --test && node scripts/selftest.mjs"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^25.0.1"
+  },
+  "devDependencies_note": "optional: only `npm run test:ui` needs jsdom; the server, tests and selftest have zero dependencies"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "ZimDate — serious dating, built for Zimbabwe",
+  "short_name": "ZimDate",
+  "description": "Compatibility-first dating with auditable match percentages.",
+  "start_url": "/#/discover",
+  "display": "standalone",
+  "background_color": "#fdfaf5",
+  "theme_color": "#fdfaf5",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
