@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en-ZW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ZimDate — serious dating, built for Zimbabwe</title>
+<meta name="description" content="ZimDate is a compatibility-first dating app built for Zimbabwe: 60 real questions, honest match percentages you can audit, and conversations that start with substance.">
+<meta name="theme-color" content="#fdfaf5">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon.svg">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="stylesheet" href="/styles.css">
+<meta property="og:title" content="ZimDate — serious dating, built for Zimbabwe">
+<meta property="og:description" content="60 questions, honest match percentages, zero guesswork. Built in Harare.">
+<meta property="og:type" content="website">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="shell">
+  <header class="topbar" id="topbar" hidden>
+    <div class="container topbar__inner">
+      <a class="brand" href="#/discover" aria-label="ZimDate home">
+        <span class="brand__mark" aria-hidden="true"></span>
+        <span>Zim<em>Date</em></span>
+      </a>
+      <nav class="nav" id="nav" aria-label="Main"></nav>
+    </div>
+  </header>
+  <main class="main" id="main" tabindex="-1">
+    <div class="container" id="view">
+      <div class="empty">
+        <div class="skeleton skeleton--card empty__icon" style="width:56px;height:56px;border-radius:50%"></div>
+        <p class="muted">Loading ZimDate…</p>
+      </div>
+    </div>
+  </main>
+  <nav class="tabbar" id="tabbar" aria-label="Main" hidden>
+    <div class="tabbar__inner" id="tabbar-inner"></div>
+  </nav>
+</div>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+<noscript>
+  <div class="container" style="padding:2rem 1rem">
+    <h1>ZimDate needs JavaScript</h1>
+    <p class="muted">This is a single-page application. Enable JavaScript to continue.</p>
+  </div>
+</noscript>
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

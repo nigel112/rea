@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ZimDate">
+  <rect width="64" height="64" rx="16" fill="#b8432a"/>
+  <path d="M32 47s-13-8.2-13-17.2A7.6 7.6 0 0 1 32 24a7.6 7.6 0 0 1 13 5.8C45 38.8 32 47 32 47Z" fill="#fbe6dd"/>
+  <circle cx="44" cy="20" r="5" fill="#d9a227"/>
+</svg>
