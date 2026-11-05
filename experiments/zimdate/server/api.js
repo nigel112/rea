@@ -15,6 +15,7 @@ import {
   sendError,
   readJsonBody,
   serveStatic,
+  SECURITY_HEADERS,
   mimeFor,
   safeJoin,
   clientIp,
@@ -108,6 +109,9 @@ function hydrateAnswerRow(row) {
 
 export function createZimDateServer(options = {}) {
   const db = options.db;
+  // Header policy is per-server, not module-global: the default is strict (`frame-ancestors 'self'`),
+  // and a launcher that needs to be embedded cross-origin opts in explicitly.
+  const securityHeaders = options.securityHeaders ?? SECURITY_HEADERS;
   const questions = QUESTIONS_BY_ID;
   /**
    * Route definition: [method, pattern, handler, options]
@@ -184,8 +188,8 @@ export function createZimDateServer(options = {}) {
       const method = req.method ?? 'GET';
       const match = matchRoute(routes, method, pathname);
       if (!match) {
-        if (isKnownPath(pathname)) return sendJson(res, 405, { error: { code: 'method_not_allowed', message: 'Wrong method for this endpoint.' } });
-        return sendJson(res, 404, { error: { code: 'not_found', message: 'No such endpoint.' } });
+        if (isKnownPath(pathname)) return sendJson(res, 405, { error: { code: 'method_not_allowed', message: 'Wrong method for this endpoint.' } }, {}, securityHeaders);
+        return sendJson(res, 404, { error: { code: 'not_found', message: 'No such endpoint.' } }, {}, securityHeaders);
       }
       return handleRoute({ req, res, url, pathname, match, method });
     }
@@ -195,16 +199,16 @@ export function createZimDateServer(options = {}) {
       const relative = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
       const full = safeJoin(PUBLIC_DIR, relative);
       if (full) {
-        const served = await serveStatic(res, full, mimeFor(relative), req);
+        const served = await serveStatic(res, full, mimeFor(relative), req, { headers: securityHeaders });
         if (served) return;
       }
       // SPA fallback: unknown non-API paths render the app shell, which routes client-side.
       if (!relative.includes('.')) {
         const shell = safeJoin(PUBLIC_DIR, 'index.html');
-        if (shell && (await serveStatic(res, shell, 'text/html; charset=utf-8', req, { cacheControl: 'no-cache' }))) return;
+        if (shell && (await serveStatic(res, shell, 'text/html; charset=utf-8', req, { cacheControl: 'no-cache', headers: securityHeaders }))) return;
       }
     }
-    return sendJson(res, 404, { error: { code: 'not_found', message: 'Not found.' } });
+    return sendJson(res, 404, { error: { code: 'not_found', message: 'Not found.' } }, {}, securityHeaders);
   }
 
   function isKnownPath(pathname) {
@@ -256,17 +260,18 @@ export function createZimDateServer(options = {}) {
 
       const payload = await match.handler(ctx);
       if (res.headersSent) return;
-      if (payload === undefined) return sendJson(res, 204, {});
+      if (payload === undefined) return sendJson(res, 204, {}, {}, securityHeaders);
       const status = payload?.__status ?? 200;
-      const headers = payload?.__headers ?? {};
+      // A handler may set its own response headers (e.g. Set-Cookie), separate from the policy.
+      const extraHeaders = payload?.__headers ?? {};
       const body = payload?.__body ?? payload;
-      return sendJson(res, status, body, headers);
+      return sendJson(res, status, body, extraHeaders, securityHeaders);
     } catch (error) {
       counters.errors += 1;
       if (error instanceof social.DomainError) {
-        return sendError(res, new HttpError(error.status, error.code, error.message, error.extra));
+        return sendError(res, new HttpError(error.status, error.code, error.message, error.extra), securityHeaders);
       }
-      return sendError(res, error);
+      return sendError(res, error, securityHeaders);
     }
   }
 

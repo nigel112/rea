@@ -496,6 +496,34 @@ describe('profile editing', () => {
   });
 });
 
+describe('embedding policy', () => {
+  it('defaults to refusing cross-origin framing', async () => {
+    const response = await makeClient().get('/api/health');
+    const csp = response.headers?.get?.('content-security-policy') ?? '';
+    assert.match(csp, /frame-ancestors 'self'/);
+    // X-Frame-Options is only sent when it agrees with frame-ancestors; sending both is how a
+    // site ends up un-embeddable after someone relaxes the CSP and forgets the legacy header.
+    assert.equal(response.headers?.get?.('x-frame-options'), 'SAMEORIGIN');
+  });
+
+  it('can be relaxed for preview environments without touching the default', async () => {
+    const { securityHeaders } = await import('../server/http.js');
+    const permissive = securityHeaders('*');
+    assert.match(permissive['Content-Security-Policy'], /frame-ancestors \*/);
+    assert.equal(permissive['X-Frame-Options'], undefined);
+
+    const { createZimDateServer } = await import('../server/api.js');
+    const relaxed = createZimDateServer({ db, securityHeaders: permissive });
+    const server = createServer((req, res) => relaxed.handle(req, res));
+    await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const url = `http://127.0.0.1:${server.address().port}/api/health`;
+    const response = await fetch(url);
+    assert.match(response.headers.get('content-security-policy'), /frame-ancestors \*/);
+    assert.equal(response.headers.get('x-frame-options'), null);
+    await new Promise((resolve) => server.close(resolve));
+  });
+});
+
 describe('verification', () => {
   it('is a real, idempotent state change', async () => {
     const client = makeClient();

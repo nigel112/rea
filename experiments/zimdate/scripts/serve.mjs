@@ -6,7 +6,9 @@
  *   PORT=8080 node scripts/serve.mjs
  *   ZIMDATE_DB=/tmp/x.db node scripts/serve.mjs
  *
- * Binds 0.0.0.0 so the sandbox preview proxy can reach it.
+ * Binds 0.0.0.0 so the sandbox preview proxy can reach it, and allows framing by default so the
+ * app renders inside hosted preview environments. Set ZIMDATE_FRAME_ANCESTORS='none' (or a list of
+ * origins) when this is facing real users — see `securityHeaders` in server/http.js.
  */
 import { createServer } from 'node:http';
 import { existsSync, mkdirSync } from 'node:fs';
@@ -15,6 +17,7 @@ import { fileURLToPath } from 'node:url';
 
 import { openAndMigrate, get } from '../server/db/index.js';
 import { createZimDateServer } from '../server/api.js';
+import { securityHeaders } from '../server/http.js';
 import { seedDatabase, DEMO_EMAIL, DEMO_PASSWORD, ADMIN_EMAIL, ADMIN_PASSWORD } from '../server/seed/seed.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -36,7 +39,11 @@ if (userCount <= 1 && autoSeed) {
   seedSummary.elapsedMs = Date.now() - started;
 }
 
-const app = createZimDateServer({ db });
+// This entry point is the demo/preview server, so it explicitly opts into being framed. The
+// library default stays `'self'`; only this launcher relaxes it, and only when the operator has
+// not made a choice.
+const frameAncestors = process.env.ZIMDATE_FRAME_ANCESTORS ?? '*';
+const app = createZimDateServer({ db, securityHeaders: securityHeaders(frameAncestors) });
 
 const server = createServer((req, res) => {
   app.handle(req, res).catch((error) => {
@@ -58,6 +65,9 @@ server.listen(port, host, () => {
   if (seedSummary) console.log(`  seeded   : ${seedSummary.users} users, ${seedSummary.answers} answers in ${seedSummary.elapsedMs} ms`);
   console.log(`  demo     : ${DEMO_EMAIL} / ${DEMO_PASSWORD}`);
   console.log(`  admin    : ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
+  if (frameAncestors === '*') {
+    console.log(`  framing  : allowed from any origin (preview mode)`);
+  }
 });
 
 function shutdown(signal) {

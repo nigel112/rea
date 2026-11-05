@@ -4,7 +4,7 @@
 questionnaire-driven dating category — the product OkCupid pioneered — rebuilt from a
 reverse-engineering study of how its matching actually works.
 
-ZimDate is not a UI mock. It is a real server, a real database, a real matching kernel with 97
+ZimDate is not a UI mock. It is a real server, a real database, a real matching kernel with 99
 tests and 62 browser-level checks behind it. Start it with one command and you get a populated
 Zimbabwe dating site: 500 seeded profiles, 60 questions, live match percentages, likes, mutual
 matches, chat, moderation and paid tiers.
@@ -83,7 +83,7 @@ defence on static files, and parameterised SQL everywhere.
 ## Verify it yourself
 
 ```bash
-npm test           # 97 unit + integration tests (no dependencies)
+npm test           # 99 unit + integration tests (no dependencies)
 npm run check      # the above, then 46 self-checks against a live server
 npm run test:ui    # 62 browser-level checks (needs: npm i -D jsdom)
 ```
@@ -115,9 +115,9 @@ server/
 public/
   js/screens/          eleven screens, one module each, no build step
   styles.css           the whole design system in one file
-test/                  97 tests
+test/                  99 tests
 scripts/
-  serve.mjs            entry point
+  serve.mjs            entry point (preview mode: allows cross-origin framing)
   selftest.mjs         46 self-checks against a live server
   ui-check.mjs         62 browser-level checks (jsdom)
   screenshots.mjs      renders every screen to artifacts/screens/*.html
@@ -185,6 +185,25 @@ a future client — can react without parsing English.
 **Simulated money is labelled as simulated.** Checkout returns `{simulated: true}`, plans say so in
 the interface, and the README says it too. A demo that quietly pretends to charge a card is a demo
 that will one day accidentally charge one.
+
+## Configuration
+
+| Variable | Default | What it does |
+| -------- | ------- | ------------ |
+| `PORT` | `3000` | Listen port |
+| `HOST` | `0.0.0.0` | Bind address |
+| `ZIMDATE_DB` | `data/zimdate.db` | SQLite file path |
+| `ZIMDATE_PROFILES` | `500` | Profiles to seed on first boot |
+| `ZIMDATE_AUTOSEED` | enabled | Set `0` to never seed |
+| `ZIMDATE_FRAME_ANCESTORS` | `*` in `serve.mjs`, `'self'` in the library | CSP `frame-ancestors`: who may iframe the app |
+| `ZIMDATE_DEBUG` | off | Include internal error messages in 500s |
+
+**On framing.** `X-Frame-Options`/`frame-ancestors 'self'` is the right default for a real
+deployment, and it is also exactly what stops a hosted preview environment from rendering the app,
+because those environments embed you in a cross-origin iframe. So `serve.mjs` — the demo launcher —
+opts into `frame-ancestors *` and omits `X-Frame-Options`, while `createZimDateServer()` keeps the
+strict default for anyone importing the library. Set `ZIMDATE_FRAME_ANCESTORS='none'` (or a
+specific origin list) to lock it down.
 
 ## Known limitations
 

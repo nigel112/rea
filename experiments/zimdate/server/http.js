@@ -22,28 +22,54 @@ export class HttpError extends Error {
   }
 }
 
-export const SECURITY_HEADERS = Object.freeze({
-  'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'SAMEORIGIN',
-  'Referrer-Policy': 'same-origin',
-  'Permissions-Policy': 'camera=(), microphone=(), geolocation=(self)',
-  'Content-Security-Policy':
-    "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'",
-});
+/**
+ * Frame embedding.
+ *
+ * `X-Frame-Options: SAMEORIGIN` and CSP `frame-ancestors 'self'` are the correct defaults, and
+ * they are what a real deployment wants: clickjacking is a real attack and a dating site is a
+ * tempting target. But they also mean the app cannot be shown inside an iframe on another origin,
+ * which is exactly how hosted preview environments (and embedding a demo in a portfolio page) work.
+ *
+ * So this is a decision, not a default: `ZIMDATE_FRAME_ANCESTORS` overrides the allowlist. Set it to
+ * `'none'` for production, or to the specific origins allowed to frame the app.
+ *
+ * @param {string | undefined} ancestors
+ */
+export function securityHeaders(ancestors = process.env.ZIMDATE_FRAME_ANCESTORS) {
+  const allow = ancestors === undefined ? "'self'" : ancestors;
+  const headers = {
+    'X-Content-Type-Options': 'nosniff',
+    'Referrer-Policy': 'same-origin',
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(self)',
+    'Content-Security-Policy':
+      `default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; ` +
+      `script-src 'self'; connect-src 'self'; frame-ancestors ${allow}; base-uri 'self'; form-action 'self'`,
+  };
+  // X-Frame-Options has no origin allowlist worth using (the grammar is broken in every browser)
+  // and it *overrides* frame-ancestors wherever both are sent. Send it only when we are refusing
+  // all framing; otherwise let CSP do the work.
+  if (allow.replace(/\s/g, '') === "'none'" || allow.replace(/\s/g, '') === "'self'") {
+    headers['X-Frame-Options'] = allow.replace(/\s/g, '') === "'none'" ? 'DENY' : 'SAMEORIGIN';
+  }
+  return Object.freeze(headers);
+}
 
-export function sendJson(res, status, payload, extraHeaders = {}) {
+/** Headers computed once per process from the environment. */
+export const SECURITY_HEADERS = securityHeaders();
+
+export function sendJson(res, status, payload, extraHeaders = {}, baseHeaders = SECURITY_HEADERS) {
   const body = JSON.stringify(payload);
   res.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
     'Content-Length': Buffer.byteLength(body),
     'Cache-Control': 'no-store',
-    ...SECURITY_HEADERS,
+    ...baseHeaders,
     ...extraHeaders,
   });
   res.end(body);
 }
 
-export function sendError(res, error) {
+export function sendError(res, error, baseHeaders = SECURITY_HEADERS) {
   const status = error instanceof HttpError ? error.status : 500;
   const code = error instanceof HttpError ? error.code : 'internal_error';
   const message =
@@ -55,7 +81,7 @@ export function sendError(res, error) {
   if (!(error instanceof HttpError) && process.env.ZIMDATE_QUIET !== '1') {
     console.error('[zimdate] unhandled error', error);
   }
-  sendJson(res, status, { error: { code, message, ...(error?.extra ?? {}) } });
+  sendJson(res, status, { error: { code, message, ...(error?.extra ?? {}) } }, {}, baseHeaders);
 }
 
 export async function readJsonBody(req, options = {}) {
@@ -84,6 +110,7 @@ export async function readJsonBody(req, options = {}) {
 
 /** Static serving with traversal guards. Returns false when the file does not exist. */
 export async function serveStatic(res, absolutePath, mimeType, req, options = {}) {
+  const baseHeaders = options.headers ?? SECURITY_HEADERS;
   const { readFile, stat } = await import('node:fs/promises');
   let info;
   try {
@@ -95,7 +122,7 @@ export async function serveStatic(res, absolutePath, mimeType, req, options = {}
 
   const etag = `W/"${info.size.toString(16)}-${Math.floor(info.mtimeMs).toString(16)}"`;
   if (req.headers['if-none-match'] === etag) {
-    res.writeHead(304, { ETag: etag, ...SECURITY_HEADERS });
+    res.writeHead(304, { ETag: etag, ...baseHeaders });
     res.end();
     return true;
   }
@@ -106,7 +133,7 @@ export async function serveStatic(res, absolutePath, mimeType, req, options = {}
     'Content-Length': bytes.length,
     ETag: etag,
     'Cache-Control': options.cacheControl ?? 'public, max-age=0, must-revalidate',
-    ...SECURITY_HEADERS,
+    ...baseHeaders,
   });
   if (req.method === 'HEAD') {
     res.end();
